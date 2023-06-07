@@ -3,10 +3,10 @@
 # @file: snapshot.py
 # @time: 2020/03/10
 import numpy as np
-from anomaly_generation import anomaly_generation
-from load_uci_messages import load_uci_messages
-from negative_sample import negative_sample
-from model import *
+from .anomaly_generation import anomaly_generation
+from .load_uci_messages import load_uci_messages
+from .negative_sample import negative_sample
+from .model import *
 from tqdm import tqdm
 
 

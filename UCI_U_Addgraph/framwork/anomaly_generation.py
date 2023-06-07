@@ -6,7 +6,7 @@ import numpy as np
 from scipy.sparse import csr_matrix
 import operator
 import random
-from load_uci_messages import load_uci_messages
+from .load_uci_messages import load_uci_messages
 
 
 def anomaly_generation(ini_graph_percent, anomaly_percent, data, n, m):
