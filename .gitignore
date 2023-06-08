@@ -27,3 +27,4 @@ DGraph/framwork/__pycache__/negative_sample.cpython-37.pyc
 DGraph/framwork/__pycache__/snapshot.cpython-36.pyc
 DGraph/framwork/__pycache__/snapshot.cpython-37.pyc
 DGraph/dgraph_processed_data/dgrah_processed_*.txt
+DGraph/snapshot_*.npz

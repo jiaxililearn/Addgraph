@@ -161,21 +161,26 @@ def train():
     #     H_list=torch.cat([H_list, torch.zeros(nodes, args.hidden).unsqueeze(0)], dim=0)
     # H_list.append(torch.zeros((nodes, args.hidden)))
     # H_list[args.w-1]=torch.randn(nodes, args.hidden)
-
+    float_type = torch.float32
     # optimizer.zero_grad()
     for epoch in range(args.epochs):
         print(f"******************** Epoch {epoch} *********************")
         # snapshots_train = snapshots_train.cuda()
-        H_list = torch.zeros(1, nodes, args.hidden)
-        H_ = torch.zeros((args.w, nodes, args.hidden))
+        H_list = torch.zeros(1, nodes, args.hidden, dtype=float_type)
+        print("init. H_list")
+        H_ = torch.zeros((args.w, nodes, args.hidden), dtype=float_type)
+        print("init. H_")
         for k in range(args.w - 1):
             H_list = torch.cat(
-                [H_list, torch.zeros(nodes, args.hidden).unsqueeze(0)], dim=0
+                [H_list, torch.zeros(nodes, args.hidden, dtype=float_type).unsqueeze(0)], dim=0
             )
+        print("reinit. H_list")
         stdv = 1.0 / math.sqrt(H_list[-1].size(1))
         H_list[-1][:n_train, :].data.uniform_(-stdv, stdv)
         # nn.init.sparse_(H_list[-1][:n_train, :], sparsity=0.9)
-        adj = torch.zeros((nodes, nodes))
+        print("H_list uniform")
+        adj = torch.zeros((nodes, nodes), dtype=float_type)
+        print("init. adj")
         loss_a = torch.zeros(1)
         # head = 0
         print(f"l_train: {l_train}")
