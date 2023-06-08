@@ -11,7 +11,7 @@ from tqdm import tqdm
 
 
 def anomaly_generation(ini_graph_percent, anomaly_percent, data, n, m):
-    """ generate anomaly
+    """generate anomaly
     split the whole graph into training network which includes parts of the
     whole graph edges(with ini_graph_percent) and testing edges that includes
     a ratio of manually injected anomaly edges, here anomaly edges mean that
@@ -34,11 +34,11 @@ def anomaly_generation(ini_graph_percent, anomaly_percent, data, n, m):
                         (nodeID, nodeID)
     """
     # np.random.seed(1)
-    print('Generating anomalous dataset...\n')
-    print('Initial network edge percent: ' + str(ini_graph_percent * 100))
-    print('\n')
-    print('Initial anomaly percent : ' + str(anomaly_percent * 100))
-    print('\n')
+    print("Generating anomalous dataset...\n")
+    print("Initial network edge percent: " + str(ini_graph_percent * 100))
+    print("\n")
+    print("Initial anomaly percent : " + str(anomaly_percent * 100))
+    print("\n")
     train_num = int(np.floor(ini_graph_percent * m))
 
     # region train and test edges
@@ -46,7 +46,7 @@ def anomaly_generation(ini_graph_percent, anomaly_percent, data, n, m):
     train = data[:train_num, :]
     n_train_id = np.unique(train)
     n_train = len(n_train_id)
-    adj = np.zeros((n, n))
+    adj = np.zeros((n, n), dtype="float32")
     for edge in tqdm(train):
         adj[edge[0] - 1][edge[1] - 1] = adj[edge[0] - 1][edge[1] - 1] + 1
         adj[edge[1] - 1][edge[0] - 1] = adj[edge[1] - 1][edge[0] - 1] + 1
@@ -80,8 +80,6 @@ def anomaly_generation(ini_graph_percent, anomaly_percent, data, n, m):
     anomaly_pos = np.random.choice(np.size(idx_test, 0), anomaly_num, replace=False)
     idx_test[anomaly_pos] = 1
 
-
-
     # endregion
 
     # region Take anomaly_num edges from fake_edges as anomaly
@@ -94,11 +92,7 @@ def anomaly_generation(ini_graph_percent, anomaly_percent, data, n, m):
     # randsample: sample without replacement
     # it's different from datasample!
 
-
-
     # anomaly_pos = np.random.choice(100, anomaly_num, replace=False)+200
-
-
 
     # endregion
 
@@ -110,7 +104,6 @@ def anomaly_generation(ini_graph_percent, anomaly_percent, data, n, m):
     # synthetic_test[idx_anomalies, 0:2] = anomalies
     test_edge = processEdges(idx_anomalies[0], test_aedge, adj)
     synthetic_test = np.concatenate((test_edge, idx_test), axis=1)
-
 
     # endregion
 
@@ -137,13 +130,13 @@ def processEdges(idx_anomalies, test_aedge, adj):
         flag = 0
         th = np.max(test_aedge[0:idx, :])
         a, b = np.random.choice(th, 2, replace=False) + 1
-        if a > b :
+        if a > b:
             idx_1 = b
             idx_2 = a
-        else :
+        else:
             idx_1 = a
             idx_2 = b
-        while (adj[idx_1 - 1][idx_2 - 1] != 0):
+        while adj[idx_1 - 1][idx_2 - 1] != 0:
             a, b = np.random.choice(th, 2, replace=False) + 1
             if a > b:
                 idx_1 = b
@@ -151,31 +144,31 @@ def processEdges(idx_anomalies, test_aedge, adj):
             else:
                 idx_1 = a
                 idx_2 = b
-        while (flag == 0):
+        while flag == 0:
             for edge in test_aedge[0:idx, :]:
-                if idx_1 == edge[0] and idx_2 == edge[1] :
+                if idx_1 == edge[0] and idx_2 == edge[1]:
                     flag = 1
                     break
-                else :
+                else:
                     continue
-            if flag == 0 :
+            if flag == 0:
                 test_aedge[idx, 0] = idx_1
                 test_aedge[idx, 1] = idx_2
                 break
-            else :
+            else:
                 idx_1, idx_2 = np.random.choice(th, 2, replace=False) + 1
                 flag = 0
     # idx_remove_dups = np.nonzero(fake_edges[:, 0] - fake_edges[:, 1] < 0)
     #
     # fake_edges = fake_edges[idx_remove_dups]
 
-        # a = fake_edges.tolist()
-        # b = data.tolist()
-        # c = []
-        #
-        # for i in a:
-        #     if i not in b:
-        #         c.append(i)
+    # a = fake_edges.tolist()
+    # b = data.tolist()
+    # c = []
+    #
+    # for i in a:
+    #     if i not in b:
+    #         c.append(i)
     # # fake_edges = np.array(c)
     # fake_edges = c
     # uniqueEdge=[]
@@ -197,7 +190,7 @@ def edgeList2Adj(data):
     data = tuple(map(tuple, data))
 
     n = max(max(user, item) for user, item in data)  # Get size of matrix
-    matrix = np.zeros((n, n))
+    matrix = np.zeros((n, n), dtype = 'float32')
     for user, item in data:
         matrix[user - 1][item - 1] = 1  # Convert to 0-based index.
         matrix[item - 1][user - 1] = 1  # Convert to 0-based index.
@@ -205,7 +198,7 @@ def edgeList2Adj(data):
 
 
 if __name__ == "__main__":
-    data_path = '../opsahl-ucsocial/out.opsahl-ucsocial'
+    data_path = "../opsahl-ucsocial/out.opsahl-ucsocial"
     data, n, m = load_uci_messages(data_path, 1)
     edges = data
     vertices = np.unique(edges)

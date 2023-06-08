@@ -76,7 +76,7 @@ if __name__ == "__main__":
     snapshots_train, l_train, snapshots_test, l_test, nodes = snapshot(data_path, 0.3, 0.5, 0.2, 1000)
     H = torch.rand(nodes, hidden)
     H_ = torch.zeros(3, nodes, hidden)
-    adj = np.zeros((nodes, nodes))
+    adj = np.zeros((nodes, nodes), dtype = 'float32')
     snapshot = snapshots_train[0]
     n_data, n_loss, adj = negative_sample(adj, snapshots_train[0], H, Net4)
     adjn = normalize_adj(adj + np.eye(adj.shape[0]))
