@@ -7,6 +7,7 @@ from scipy.sparse import csr_matrix
 import operator
 import random
 from .load_uci_messages import load_uci_messages
+from tqdm import tqdm
 
 
 def anomaly_generation(ini_graph_percent, anomaly_percent, data, n, m):
@@ -46,7 +47,7 @@ def anomaly_generation(ini_graph_percent, anomaly_percent, data, n, m):
     n_train_id = np.unique(train)
     n_train = len(n_train_id)
     adj = np.zeros((n, n))
-    for edge in train:
+    for edge in tqdm(train):
         adj[edge[0] - 1][edge[1] - 1] = adj[edge[0] - 1][edge[1] - 1] + 1
         adj[edge[1] - 1][edge[0] - 1] = adj[edge[1] - 1][edge[0] - 1] + 1
     # nodes=np.unique(data)
@@ -132,7 +133,7 @@ def processEdges(idx_anomalies, test_aedge, adj):
     # tmp = fake_edges[idx_fake]
     # tmp[:, [0, 1]] = tmp[:, [1, 0]]  # 调整前后顺序，使得边信息（node1，node2）中node1<=node2
     # fake_edges[idx_fake] = tmp
-    for idx in idx_anomalies:
+    for idx in tqdm(idx_anomalies):
         flag = 0
         th = np.max(test_aedge[0:idx, :])
         a, b = np.random.choice(th, 2, replace=False) + 1

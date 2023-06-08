@@ -105,22 +105,26 @@ optimizer = optim.Adam(
     lr=args.lr,
 )  # weight_decay=args.weight_decay
 
-snapshots_train, l_train, snapshots_test, l_test, nodes, n_train = snapshot(
-    data_path=data_path,
-    sample_rate=args.sample_rate,
-    ini_graph_percent=args.ini_graph_percent,
-    anomaly_percent=args.anomaly_percent,
-    snapshots_=args.snapshots_,
-)
-np.savez(
-    "snapshot_dgraph_.npz",
-    snapshots_train=snapshots_train,
-    l_train=l_train,
-    snapshots_test=snapshots_test,
-    l_test=l_test,
-    nodes=nodes,
-    n_train=n_train,
-)
+if not os.path.exists("snapshot_dgraph_.npz"):
+    print("Create Snapshot..")
+    snapshots_train, l_train, snapshots_test, l_test, nodes, n_train = snapshot(
+        data_path=data_path,
+        sample_rate=args.sample_rate,
+        ini_graph_percent=args.ini_graph_percent,
+        anomaly_percent=args.anomaly_percent,
+        snapshots_=args.snapshots_,
+    )
+    print("Save Snapshot..")
+    np.savez(
+        "snapshot_dgraph_.npz",
+        snapshots_train=snapshots_train,
+        l_train=l_train,
+        snapshots_test=snapshots_test,
+        l_test=l_test,
+        nodes=nodes,
+        n_train=n_train,
+    )
+print("Load Snapshot..")
 snapshots = np.load("snapshot_dgraph_.npz", allow_pickle=True)
 snapshots_train, l_train, nodes, n_train = (
     snapshots["snapshots_train"],

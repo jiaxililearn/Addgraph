@@ -14,21 +14,32 @@ def snapshot(data_path, sample_rate, ini_graph_percent, anomaly_percent, snapsho
     data, n, m = load_uci_messages(data_path, sample_rate)
     n_train, train, synthetic_test = anomaly_generation(ini_graph_percent, anomaly_percent, data, n, m)
     # train_snaps = int(np.ceil(np.size(train, 0) / snapshots_))
-    l_train = np.size(train, 0)
     snapshots_train = []
     current = 0
+    l_train = np.size(train, 0)
+    print(f"snapshot/l_train: {l_train}")
+    print(f"snapshot/snapshots_: {snapshots_}")
+    pbar = tqdm(total=snapshots_)
     while (l_train - current) >= snapshots_:
         snapshots_train.append(train[current:current + snapshots_])
         current += snapshots_
+        pbar.update(1)
+    pbar.close()
     snapshots_train.append(train[current:])
     print("Train data:number of snapshots: %d, edges in each snapshot: %d" % (len(snapshots_train), snapshots_))
 
     l_test = np.size(synthetic_test, 0)
     snapshots_test = []
     current = 0
+
+    print(f"snapshot/l_test: {l_test}")
+    print(f"snapshot/snapshots_: {snapshots_}")
+    pbar = tqdm(total=snapshots_)
     while (l_test - current) >= snapshots_:
         snapshots_test.append(synthetic_test[current:current + snapshots_])
         current += snapshots_
+        pbar.update(1)
+    pbar.close()
     snapshots_test.append(synthetic_test[current:])
     print("Test data:number of snapshots: %d, edges in each snapshot: %d" % (len(snapshots_test), snapshots_))
     return snapshots_train, len(snapshots_train), snapshots_test, len(snapshots_test), n, n_train
