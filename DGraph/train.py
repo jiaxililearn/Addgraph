@@ -142,7 +142,7 @@ if args.cuda:
     print("OK")
 else:
     torch.set_default_tensor_type(torch.FloatTensor)
-
+print("Start Train..")
 
 def train():
     # torch.set_default_tensor_type(torch.FloatTensor)
@@ -164,6 +164,7 @@ def train():
 
     # optimizer.zero_grad()
     for epoch in range(args.epochs):
+        print(f"******************** Epoch {epoch} *********************")
         # snapshots_train = snapshots_train.cuda()
         H_list = torch.zeros(1, nodes, args.hidden)
         H_ = torch.zeros((args.w, nodes, args.hidden))
@@ -178,7 +179,7 @@ def train():
         loss_a = torch.zeros(1)
         # head = 0
         print(f"l_train: {l_train}")
-        for i in range(l_train):
+        for i in tqdm(range(l_train)):
             optimizer.zero_grad()
             # snapshot=snapshots_train[i]
             # tail_ = np.unique(snapshots_train[i])
